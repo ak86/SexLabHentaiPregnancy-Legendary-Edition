@@ -1,0 +1,23 @@
+<fomod>
+  <Name>SexLabHentaiPregnancy</Name>
+  <Version>1.19g</Version>
+  <LastKnownVersion>
+  </LastKnownVersion>
+  <Id>
+  </Id>
+  <Author>flyingtoasters</Author>
+  <CategoryId>0</CategoryId>
+  <CustomCategoryId>0</CustomCategoryId>
+  <IsEndorsed>False</IsEndorsed>
+  <Description>
+  Ed86: 
+  increased active pregnancies(actor alias) 20->50 (requires clean save)
+  fixed missing property
+  fixed scripts for sexlab v1.59c+
+  added breast and belly scale toggles
+  changed scaling to NiO
+  rewrote few scripts
+  slif integration
+  </Description>
+  <UpdateWarningEnabled>False</UpdateWarningEnabled>
+</fomod>
