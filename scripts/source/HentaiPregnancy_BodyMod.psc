@@ -11,7 +11,7 @@ Function SetNodeScale(Actor akActor, string nodeName, float value)
 		isFemale = false
 	endif
 	
-	If Game.GetModbyName("SexLab Inflation Framework.esp") != 255 && value != 1
+	If Game.GetModbyName("SexLab Inflation Framework.esp") != 255
 		string SLIF_modName = "SexLab Hentai Pregnancy"
 		string sKey = ""
 		
