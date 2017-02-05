@@ -15,6 +15,7 @@ Int pregnancyId = -1
 Int DurationHours = 0
 Int PostDurationHours = 0
 Int CurrentHour = 0
+Int Milk = 0
 
 float TargetBreastSize = 0.0
 float TargetBellySize = 0.0
@@ -91,6 +92,15 @@ endFunction
 
 int function getPostDurationHours()
 	return PostDurationHours
+endFunction
+
+int function getMilk()
+	return Milk
+endFunction
+
+int function setMilk(int i)
+	Milk = i
+	return Milk
 endFunction
 
 function incrSize()
@@ -245,6 +255,25 @@ State Pregnant
 			HentaiP.addTempPregnancyEffects(ActorRef, DurationHours - CurrentHour, isvictim)
 			
 			RegisterForSingleUpdateGameTime(1)
+			
+			if ActorRef == HentaiP.PlayerRef
+				If CurrentHour >= DurationHours/3
+					;hand milking
+					if !ActorRef.HasSpell(HentaiP.HentaiMilkSquirtSpellList.GetAt(0) as Spell)
+						Debug.Notification("It seems due to pregnancy you breasts started lactating")
+						ActorRef.Addspell(HentaiP.HentaiMilkSquirtSpellList.GetAt(0) as Spell)
+					EndIf
+					;bottle milking; req HF
+					if !ActorRef.HasSpell(HentaiP.HentaiMilkSquirtSpellList.GetAt(1) as Spell) && Game.GetModbyName("HearthFires.esm") != 255
+						ActorRef.Addspell(HentaiP.HentaiMilkSquirtSpellList.GetAt(1) as Spell)
+					EndIf
+				EndIf
+				
+				If CurrentHour > DurationHours/3
+					Milk += 1
+				EndIf
+			EndIf
+			
 		Else
 			UnregisterForUpdate()
 			GoToState("PregnancyEnded")
@@ -329,7 +358,18 @@ EndState
 
 State ClearPregnancy
 	Event OnBeginState()
-		UnregisterForUpdate()	
+		UnregisterForUpdate()
+			
+		if ActorRef == HentaiP.PlayerRef
+			if ActorRef.HasSpell(HentaiP.HentaiMilkSquirtSpellList.GetAt(0) as Spell)
+				Debug.Notification("As your pregnancy has ended you feel your breasts no longer produce any milk")
+				ActorRef.RemoveSpell(HentaiP.HentaiMilkSquirtSpellList.GetAt(0) as Spell)
+			EndIf
+			if ActorRef.HasSpell(HentaiP.HentaiMilkSquirtSpellList.GetAt(1) as Spell)
+				ActorRef.RemoveSpell(HentaiP.HentaiMilkSquirtSpellList.GetAt(1) as Spell)
+			EndIf
+		endif
+
 		GoToState("ReadyForPregnancy")
 	EndEvent
 	

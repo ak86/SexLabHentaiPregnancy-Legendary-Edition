@@ -3,17 +3,23 @@ Scriptname HentaiPregnancy extends Quest
 HentaiPregnancyConfig Property config Auto
 SexLabFramework Property SexLab Auto
 HentaiPregnancy_BodyMod Property BodyMod Auto
-Spell Property HentaiImpregnation Auto
+
 Actor Property PlayerRef Auto
+
 Armor Property HentaiAmnioticFluid Auto
 Armor Property HentaiPregnancyMilkR Auto
 Armor Property HentaiPregnancyMilkL Auto
 
+FormList Property HentaiMilkSquirtSpellList Auto
+Form Property HentaiMilkSquirtBYOHBottle Auto
+
+Spell Property HentaiImpregnation Auto
 Spell Property HentaiPregnancyStaggerSpell Auto
 Spell Property HentaiPregnancyFearSpell Auto
 
 EffectShader property HentaiPregnancyMilkCBBE auto
 EffectShader property HentaiPregnancyMilkUNP auto
+MagicEffect Property HentaiMilkSquirtSpellEffect Auto
 
 HentaiPregnantActorAlias Property PregnantActor00 Auto
 HentaiPregnantActorAlias Property PregnantActor01 Auto
@@ -206,8 +212,21 @@ string[] function getPregnancyList()
 	endWhile
 	return plist
 endFunction
+
 bool function setPregnant(Actor father, Actor mother, bool isvictim, bool fertilised)
 	bool ispregnant = false
+	
+	;Skeleton check	
+	if !NetImmerse.HasNode(mother, "NPC L Breast", false)
+		Debug.Notification(mother.GetActorBase().GetName() + " does not have NPC L Breast, check your skeleton")
+	endIf
+	if !NetImmerse.HasNode(mother, "NPC R Breast", false)
+		Debug.Notification(mother.GetActorBase().GetName() + " does not have NPC R Breast, check your skeleton")
+	endIf
+	if !NetImmerse.HasNode(mother, "NPC Belly", false)
+		Debug.Notification(mother.GetActorBase().GetName() + " does not have NPC Belly node, check your skeleton")
+	endIf
+	
 	if(mother.GetActorBase().IsUnique())
 		int actorIndex = getPregnancyReadyActorsIndex()
 		;Debug.Notification("Pregnant slot availuable " + actorIndex)		
@@ -417,6 +436,17 @@ function playLeftMilkEffect(Actor ActorRef)
 
 	UnequipItem(ActorRef, HentaiPregnancyMilkL, false, true)
 	Utility.Wait(4.0)
+	
+	EquipItem(ActorRef, stripped, false, false)
+endfunction
+
+function playNoMilkEffect(Actor ActorRef)
+	;ActorRef.SetExpressionOverride(4, 100)
+	
+	form stripped = getBodyItem(ActorRef)
+	UnequipItem(ActorRef, stripped, true, false)
+	SexLab.PickVoice(ActorRef).Moan(ActorRef, 0,5)
+	Utility.Wait(12.0)
 	
 	EquipItem(ActorRef, stripped, false, false)
 endfunction
