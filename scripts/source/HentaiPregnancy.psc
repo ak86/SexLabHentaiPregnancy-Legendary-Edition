@@ -76,14 +76,17 @@ HentaiPregnantActorAlias[] Property PregnantActors Auto hidden
 Event OnInit()
 	setUpPregnantActors()
 	RegisterForModEvent("OrgasmStart", "HentaiPregnancyImpregnate")
+	RegisterForModEvent("SexLabOrgasmSeparate", "HentaiPregnancyImpregnateS")
 EndEvent
 
 function gameLoaded()
 	UnregisterForModEvent("OrgasmStart")
+	UnregisterForModEvent("SexLabOrgasmSeparate")
 	if PregnantActors.find(none) > -1
 		setUpPregnantActors()
 	endif
 	RegisterForModEvent("OrgasmStart", "HentaiPregnancyImpregnate")
+	RegisterForModEvent("SexLabOrgasmSeparate", "HentaiPregnancyImpregnateS")
 	if config.EnableMessages
 		Debug.Notification("Hentai Pregnancy Ready")
 	endif
@@ -295,6 +298,45 @@ Event HentaiPregnancyImpregnate(string eventName, string argString, float argNum
 		if (MaleIndex >= 0 && FemaleIndex >= 0)
 			if(anim.HasTag("Creature") || anim.HasTag("Vaginal") || (anim.HasTag("Anal") && config.AllowAnal))
 				Actor victim = SexLab.HookVictim(argString)
+				setPregnant(actorList[MaleIndex], actorList[FemaleIndex], victim != none, random <= chance)
+			endIf
+		else
+			;Debug.Notification("could not find male ")
+		endIf
+		
+	else
+		;Debug.Notification("actorList.Length <=1 ")
+	endIf
+	
+EndEvent
+
+Event HentaiPregnancyImpregnateS(Form ActorRef, Int Thread)
+	actor akActor = ActorRef as actor
+	string id = Thread as string
+	Actor[] actorList = SexLab.HookActors(id)
+	sslThreadController controller = SexLab.HookController(id)
+	sslBaseAnimation anim = SexLab.HookAnimation(id)
+					
+	if actorList.Length > 1 && akActor != actorList[0]
+
+		int MaleIndex = -1
+		int FemaleIndex = -1
+		int i = 0
+		while (i < actorList.Length)
+			if SexLab.GetGender(actorList[i])== 0 || treatAsMale(actorList[i], controller, anim)
+				MaleIndex = i
+			elseif actorList[i].GetActorBase().GetSex() == 1
+				FemaleIndex = i			
+			endIf
+			i += 1
+		endWhile
+		
+		int random = Utility.RandomInt(0, 100)
+		int chance = config.PregnancyChance
+
+		if (MaleIndex >= 0 && FemaleIndex >= 0)
+			if(anim.HasTag("Creature") || anim.HasTag("Vaginal") || (anim.HasTag("Anal") && config.AllowAnal))
+				Actor victim = SexLab.HookVictim(id)
 				setPregnant(actorList[MaleIndex], actorList[FemaleIndex], victim != none, random <= chance)
 			endIf
 		else
