@@ -41,7 +41,7 @@ bool Property PostPregnancyEffects = true Auto Hidden
 string PostPregnancyEffectsDescription = "Enable post pregnancy effects"
 
 int OIDAllowAnal
-bool Property AllowAnal = true Auto Hidden
+bool Property AllowAnal = false Auto Hidden
 string AllowAnalDescription = "Allow anal pregnancy"
 
 int OIDBreastScaling

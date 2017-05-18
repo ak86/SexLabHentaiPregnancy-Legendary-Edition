@@ -409,7 +409,7 @@ function endPregnancy(Actor ActorRef, int pregnancyId, bool isvictim, int durati
 		EquipItem(ActorRef, HentaiAmnioticFluid, true, true)
 		form stripped = getBodyItem(ActorRef)
 		UnequipItem(ActorRef, stripped, true, false)	
-				
+		
 		playMilkLeak(ActorRef, 20)
 		
 		Debug.SendAnimationEvent(ActorRef, "IdleForceDefaultState")

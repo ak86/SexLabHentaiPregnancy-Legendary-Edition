@@ -127,9 +127,11 @@ function decrSizeBreast()
 			HentaiP.BodyMod.SetNodeScale(ActorRef, "NPC R Breast", CurrentBreastSize)
 		EndIf
 	endIf
-	if CurrentBreastSize < 1
-		if HentaiP.config.BellyScaling 
-			HentaiP.BodyMod.SetNodeScale(ActorRef, "NPC Belly", 1)
+	if CurrentBreastSize <= 1
+		CurrentBreastSize = 1
+		if HentaiP.config.BreastScaling 
+			HentaiP.BodyMod.SetNodeScale(ActorRef, "NPC L Breast", 1)
+			HentaiP.BodyMod.SetNodeScale(ActorRef, "NPC R Breast", 1)
 		EndIf
 	EndIf
 endFunction
@@ -141,11 +143,10 @@ function decrSizeBelly()
 			HentaiP.BodyMod.SetNodeScale(ActorRef, "NPC Belly", CurrentBellySize)
 		EndIf
 	endIf
-	
-	if CurrentBellySize < 1
-		if HentaiP.config.BreastScaling 
-			HentaiP.BodyMod.SetNodeScale(ActorRef, "NPC L Breast", 1)
-			HentaiP.BodyMod.SetNodeScale(ActorRef, "NPC R Breast", 1)
+	if CurrentBellySize <= 1
+		CurrentBellySize = 1
+		if HentaiP.config.BellyScaling 
+			HentaiP.BodyMod.SetNodeScale(ActorRef, "NPC Belly", 1)
 		EndIf
 	EndIf
 endFunction
@@ -249,7 +250,10 @@ State Pregnant
 				hourspassed = 1
 			endif
 			CurrentHour += hourspassed
-			incrSize()
+			While hourspassed > 0
+				incrSize()
+				hourspassed -= 1
+			EndWhile
 			lastGameTime = currentTime
 			
 			HentaiP.addTempPregnancyEffects(ActorRef, DurationHours - CurrentHour, isvictim)
@@ -270,6 +274,9 @@ State Pregnant
 				EndIf
 				
 				If CurrentHour > DurationHours/3
+					If ActorRef == HentaiP.PlayerRef
+						Debug.Notification("Your breasts are full of milk")
+					EndIf
 					Milk += 1
 				EndIf
 			EndIf
@@ -335,10 +342,18 @@ State PostPregnancy
 				hourspassed = 1
 			endif
 			CurrentHour += hourspassed
-			int hourcount = 0;
-			decrSizeBreast()
+			While CurrentBreastSize > 1 && hourspassed > 0
+				decrSizeBreast()
+				hourspassed -= 1
+			EndWhile
 			lastGameTime = currentTime
 			
+			If CurrentHour+PostDurationHours/3 < PostDurationHours
+				If ActorRef == HentaiP.PlayerRef
+					Debug.Notification("Your breasts are full of milk")
+				EndIf
+				Milk += 1
+			EndIf
 			HentaiP.addTempPostPregnancyEffects(ActorRef, PostDurationHours - CurrentHour)
 			
 			RegisterForSingleUpdateGameTime(1)
