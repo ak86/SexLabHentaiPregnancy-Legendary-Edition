@@ -87,9 +87,7 @@ function gameLoaded()
 	endif
 	RegisterForModEvent("OrgasmStart", "HentaiPregnancyImpregnate")
 	RegisterForModEvent("SexLabOrgasmSeparate", "HentaiPregnancyImpregnateS")
-	if config.EnableMessages
-		Debug.Notification("Hentai Pregnancy Ready")
-	endif
+	Debug.Notification("Hentai Pregnancy Ready")
 endFunction
 
 function setUpPregnantActors()
@@ -194,22 +192,24 @@ string[] function getPregnancyList()
 	int i = 0
 	int j = 0
 	while i < PregnantActors.Length
-		int Remainder = PregnantActors[i].getDurationHours() - PregnantActors[i].getCurrentHour()
-		string TimeDesc = "hrs left"
-		if Remainder < 0 
-			Remainder = Remainder + PregnantActors[i].getPostDurationHours()
-			TimeDesc += " (Post)"
-			if Remainder > 24
+		if	PregnantActors[i].getState() != "ReadyForPregnancy"
+			int Remainder = PregnantActors[i].getDurationHours() - PregnantActors[i].getCurrentHour()
+			string TimeDesc = "hrs left"
+			if Remainder < 0 
+				Remainder = Remainder + PregnantActors[i].getPostDurationHours()
+				TimeDesc += " (Post)"
+				if Remainder > 24
+					Remainder = Remainder / 24
+					TimeDesc = " days left (Post)"
+				endif
+			elseif Remainder > 24
 				Remainder = Remainder / 24
-				TimeDesc = " days left (Post)"
+				TimeDesc = " days left"
 			endif
-		elseif Remainder > 24
-			Remainder = Remainder / 24
-			TimeDesc = " days left"
-		endif
-		if Remainder > 0
-			plist[j] = PregnantActors[i].getMother().GetLeveledActorBase().GetName() + " By " + PregnantActors[i].getFather().GetLeveledActorBase().GetName() + " " + Remainder + TimeDesc
-			j += 1
+			if Remainder > 0
+				plist[j] = PregnantActors[i].getMother().GetLeveledActorBase().GetName() + " By " + PregnantActors[i].getFather().GetLeveledActorBase().GetName() + " " + Remainder + TimeDesc
+				j += 1
+			endIf
 		endIf
 		i += 1
 	endWhile
