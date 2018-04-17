@@ -1,8 +1,9 @@
 Scriptname HentaiImpregnated extends activemagiceffect  
 
-;appears this spell script is used for non unique npcs instead of aliases
-;not sure why since even 20 aliases should be enough, but w/e
+;this spell script is used for non unique npcs cuminflation/pregnancy imitation
+;unique npcs use true cuminflation/pregnancy in aliases
 ;its is likely its removed on game load/cell change if actor not saved by some other mods alias
+;not sure why since even 20 aliases should be enough, but w/e
 
 HentaiPregnancy Property HentaiP Auto
 

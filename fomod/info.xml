@@ -1,25 +1,26 @@
 <fomod>
-  <Name>SexLabHentaiPregnancy</Name>
-  <Version>1.19l</Version>
-  <LastKnownVersion>
-  </LastKnownVersion>
-  <Id>
-  </Id>
+  <Name>SexLabHentaiPregnancyRevamp</Name>
+  <Version>17-04-2018</Version>
   <Author>Ed86</Author>
-  <CategoryId>0</CategoryId>
-  <CustomCategoryId>0</CustomCategoryId>
-  <IsEndorsed>False</IsEndorsed>
+  <Website>https://www.patreon.com/Ed86</Website>
   <Description>
   Ed86: 
   increased active pregnancies(actor alias) 20->50 (requires clean save)
-  fixed missing property
-  fixed scripts for sexlab v1.59c+
+  fixed missing properties
+  fixed scripts for sexlab v1.59c+ support
   added breast and belly scale toggles
   changed scaling to NiO
-  rewrote few scripts
   slif integration
-  milking integration
+  added milking
   Support for SL Separate Orgasms
+  added soulgem birth
+  full mcm translation support
+  increased max pregnancy duration to 270 +-10% days
+  
+  TODO:
+  script translation support
+  female cycle
+  maybe add more pregnancy effects
+  
   </Description>
-  <UpdateWarningEnabled>False</UpdateWarningEnabled>
 </fomod>

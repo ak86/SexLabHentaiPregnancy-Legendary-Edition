@@ -6,155 +6,211 @@ HentaiPregnancy Property hentaiPregnancyQuest auto
 int Property CumInflationChance = 0 Auto Hidden
 int CumInflationChanceDefault = 0
 int OIDCumInflationChance
-string CumInflationChanceDescription = "The chance of cum inflation."
 
-int Property PregnancyChance = 100 Auto Hidden
-int PregnancyChanceDefault = 100
+int Property PregnancyChance = 15 Auto Hidden
+int PregnancyChanceDefault = 15
 int OIDPregnancyChance
-string PregnancyChanceDescription = "The chance of pregnancy."
 
-int Property ChildChance = 0 Auto Hidden
-int ChildChanceDefault = 0
+int Property ChildChance = 100 Auto Hidden
+int ChildChanceDefault = 100
 int OIDChildChance
-string ChildChanceDescription = "The chance that the pregnancy produces a child."
 
 int Property PregnancyDuration = 7 Auto Hidden
 int PregnancyDurationDefault = 7
 int OIDPregnancyDuration
-string PregnancyDurationDescription = "Duration that pregnancy lasts in days."
 
 string[] PregnancyActorOptions
 int OIDPregnancyActorOptions
 int Property PregnancyActorOption = 0 Auto Hidden
-string PregnancyActorOptionDescription  = "Who can get pregnant."
+
+string[] BirthTypeOptions
+int OIDBirthTypeOptions
+int Property BirthTypeOption = 0 Auto Hidden
 
 int OIDClearPregnancies
 bool ClearPregnancy = false
-string ClearPregnancyDescription = "Remove pregnancies for uninstall or upgrade, go back to game and wait for message"
+int[] OIDClearSinglePregnancy
 
 int OIDPregnancyEffects
 bool Property PregnancyEffects = true Auto Hidden
-string PregnancyEffectsDescription = "Enable pregnancy effects"
+
+int OIDMilking
+bool Property Milking = true Auto Hidden
+
+int OIDNPCMilking
+bool Property NPCMilking = true Auto Hidden
 
 int OIDPostPregnancyEffects
 bool Property PostPregnancyEffects = true Auto Hidden
-string PostPregnancyEffectsDescription = "Enable post pregnancy effects"
 
 int OIDAllowAnal
 bool Property AllowAnal = false Auto Hidden
-string AllowAnalDescription = "Allow anal pregnancy"
 
 int OIDBreastScaling
 bool Property BreastScaling = true Auto Hidden
-string BreastScalingDescription = "Allow Breast Scaling"
 
 int OIDBellyScaling
 bool Property BellyScaling = true Auto Hidden
-string BellyScalingDescription = "Allow Belly Scaling"
 
 string[] BodyTypeOptions
 int OIDBodyTypeOptions
 int Property BodyTypeOption = 0 Auto Hidden
-string BodyTypeOptionDescription  = "Which body - CBBE or UNP, used to apply pregnancy effects"
 
 int OIDEnableMessages
 bool Property EnableMessages = true Auto Hidden
-string EnableMessagesDescription = "Enable pregnancy messages"
 
 ; ----- Size settings -----
 Float Property MaxScaleBelly = 5.0 Auto Hidden
 Float MaxScaleBellyDefault = 5.0
 int OIDMaxScaleBelly
-string MaxScaleBellyDescription = "Adjust the max belly scale."
 
 Float Property MaxScaleBreasts = 2.0 Auto Hidden
 Float MaxScaleBreastsDefault = 2.0
 int OIDMaxScaleBreasts
-string MaxScaleBreastsDescription = "Adjust the max breast scale."
+
+; ----- Soul Gem settings -----
+
+int Property SoulGemDuration = 10 Auto Hidden
+int SoulGemDurationDefault = 10
+int OIDSoulGemDuration
+
+int Property SoulGemsMax = 9 Auto Hidden
+int SoulGemsMaxDefault = 9
+int OIDSoulGemsMax
+
+Float Property SoulGemBellySize = 1.0 Auto Hidden
+Float SoulGemBellySizeDefault = 1.0
+int OIDSoulGemBellySize
+
+int OIDSoulGemPregnancy
+bool Property SoulGemPregnancy = true Auto Hidden
+
+int OIDForcedOnly
+bool Property ForcedOnly = true Auto Hidden
+
+int OIDCreaturesOnly
+bool Property CreaturesOnly = true Auto Hidden
 
 Event OnConfigInit()
-	Pages = new string[2]
-	Pages[0] = "Pregnancy Settings"
-	Pages[1] = "Pregnancy List"
-	
-	PregnancyActorOptions = new string[2]
-	PregnancyActorOptions[0] = "All"
-	PregnancyActorOptions[1] = "NPC Only"	
-	
-	BodyTypeOptions = new string[2]
-	BodyTypeOptions[0] = "CBBE"
-	BodyTypeOptions[1] = "UNP"		
-	
+	self.RefreshStrings()
 EndEvent
 
 int function GetVersion()
-	return 1170
+	return 20180417
 endFunction
 
 event OnVersionUpdate(int a_version)
 	if (a_version > 1)
 		Debug.Trace(self + ": Updating script to version " + a_version)
-		OnConfigInit()
 		;if (a_version >= 1050 && CurrentVersion < 1050)
 		
 		;endIf
 	endIf
 endEvent
 
+Function RefreshStrings()
+	Pages = new string[3]
+	Pages[0] = "$HP_MCM_Pages1"
+	Pages[1] = "$HP_MCM_Pages2"
+	Pages[2] = "$HP_MCM_Pages3"
+	
+	PregnancyActorOptions = new string[2]
+	PregnancyActorOptions[0] = "$HP_MCM_PregnancyActorOptions1"
+	PregnancyActorOptions[1] = "$HP_MCM_PregnancyActorOptions2"
+	
+	BirthTypeOptions = new string[2]
+	BirthTypeOptions[0] = "$HP_MCM_BirthTypeOptions1"
+	BirthTypeOptions[1] = "$HP_MCM_BirthTypeOptions2"
+	
+	BodyTypeOptions = new string[3]
+	BodyTypeOptions[0] = "---"
+	BodyTypeOptions[1] = "CBBE"
+	BodyTypeOptions[2] = "UNPB"		
+EndFunction
+
 Event OnPageReset(string page)
 	{Called when a new page is selected, including the initial empty page}
 	
-	If page == "Pregnancy Settings"
+	if page == ""
+		self.RefreshStrings()
+		
+	ElseIf page == "$HP_MCM_Pages1"
+	self.RefreshStrings()
 		
 		SetCursorFillMode(TOP_TO_BOTTOM)
 		
 		SetCursorPosition(0)
+			AddHeaderOption("$HP_MCM_Pages1_PregnancySettingsHeader")
 		
-		AddHeaderOption("Pregnancy Settings")
-		
-		OIDPregnancyActorOptions = AddMenuOption("Include Actors", PregnancyActorOptions[PregnancyActorOption])
-		OIDAllowAnal = AddToggleOption("Allow Anal", AllowAnal)
-		
-		OIDPregnancyChance = AddSliderOption("Chance of pregnancy", PregnancyChance, "{0}%")
-		OIDChildChance = AddSliderOption("Chance of producing a child", ChildChance, "{0}%")
-		OIDCumInflationChance = AddSliderOption("Chance of cum inflation", CumInflationChance, "{0}%")
-		OIDPregnancyDuration = AddSliderOption("Pregnancy Duration", PregnancyDuration, "{0} days")
+				OIDPregnancyActorOptions = AddMenuOption("$HP_MCM_Pages1_PregnancyActorOptions", PregnancyActorOptions[PregnancyActorOption])
+				OIDAllowAnal = AddToggleOption("$HP_MCM_Pages1_AllowAnal", AllowAnal)
+				
+				OIDCumInflationChance = AddSliderOption("$HP_MCM_Pages1_CumInflationChance", CumInflationChance, "{0}%")
+				OIDPregnancyChance = AddSliderOption("$HP_MCM_Pages1_PregnancyChance", PregnancyChance, "{0}%")
+				OIDChildChance = AddSliderOption("$HP_MCM_Pages1_ChildChance", ChildChance, "{0}%")
+;				OIDBirthTypeOptions = AddMenuOption("$HP_MCM_Pages1_BirthTypeOptions", BirthTypeOptions[BirthTypeOption])
+				OIDPregnancyDuration = AddSliderOption("$HP_MCM_Pages1_PregnancyDuration", PregnancyDuration, "$HP_Days")
+				AddEmptyOption()
 
-		OIDBellyScaling = AddToggleOption("Allow Belly Scaling", BellyScaling)
-		OIDMaxScaleBelly = AddSliderOption("Belly Max Scale", MaxScaleBelly, "{1}")
+				OIDPregnancyEffects = AddToggleOption("$HP_MCM_Pages1_PregnancyEffects", PregnancyEffects)
+;				OIDPostPregnancyEffects = AddToggleOption("$HP_MCM_Pages1_PostPregnancyEffects", PostPregnancyEffects)
+				OIDMilking = AddToggleOption("$HP_MCM_Pages1_Milking", Milking)
+				OIDNPCMilking = AddToggleOption("$HP_MCM_Pages1_NPCMilking", NPCMilking)
+				OIDBodyTypeOptions = AddMenuOption("$HP_MCM_Pages1_BodyTypeOptions", BodyTypeOptions[BodyTypeOption])
+				AddEmptyOption()
+				
+				OIDEnableMessages = AddToggleOption("$HP_MCM_Pages1_EnableMessages", EnableMessages)
 
-		OIDBreastScaling = AddToggleOption("Allow Breast Scaling", BreastScaling)
-		OIDMaxScaleBreasts = AddSliderOption("Breasts Max Scale", MaxScaleBreasts, "{1}")
+		SetCursorPosition(1)
+			AddHeaderOption("$HP_MCM_Pages1_BodyScalingHeader")
+
+				OIDBellyScaling = AddToggleOption("$HP_MCM_Pages1_BellyScaling", BellyScaling)
+				OIDMaxScaleBelly = AddSliderOption("$HP_MCM_Pages1_MaxScaleBelly", MaxScaleBelly, "{1}")
+
+				OIDBreastScaling = AddToggleOption("$HP_MCM_Pages1_BreastScaling", BreastScaling)
+				OIDMaxScaleBreasts = AddSliderOption("$HP_MCM_Pages1_MaxScaleBreasts", MaxScaleBreasts, "{1}")
 		
-		OIDPregnancyEffects = AddToggleOption("Enable Pregnancy effects", PregnancyEffects)
-		OIDPostPregnancyEffects = AddToggleOption("Enable Post Pregnancy effects", PostPregnancyEffects)
-		OIDBodyTypeOptions = AddMenuOption("Body Type", BodyTypeOptions[BodyTypeOption])
+	ElseIf page == "$HP_MCM_Pages2"
 		
-		OIDEnableMessages = AddToggleOption("Enable Messages", EnableMessages)
-		
-		OIDClearPregnancies = AddToggleOption("Clear Pregnancies", ClearPregnancy)
-		
-	ElseIf page == "Pregnancy List"
 		SetCursorFillMode(TOP_TO_BOTTOM)
 		
 		SetCursorPosition(0)
+			AddHeaderOption("$HP_MCM_Pages2_SoulGemHeader")
+
+			OIDSoulGemPregnancy = AddToggleOption("$HP_MCM_Pages2_SoulGemPregnancy", SoulGemPregnancy)
+			OIDCreaturesOnly = AddToggleOption("$HP_MCM_Pages2_SoulGemCreaturesOnly", CreaturesOnly)
+			;OIDForcedOnly = AddToggleOption("$HP_MCM_Pages2_SoulGemForcedOnly", ForcedOnly)
+			OIDSoulGemDuration = AddSliderOption("$HP_MCM_Pages2_SoulGemDuration", SoulGemDuration, "$HP_Hours")
+			OIDSoulGemsMax = AddSliderOption("$HP_MCM_Pages2_SoulGemsMax", SoulGemsMax, "{0}")
+			OIDSoulGemBellySize = AddSliderOption("$HP_MCM_Pages2_SoulGemBellySize", SoulGemBellySize, "{1}")
 		
-		AddHeaderOption("Pregnancy List")
+	ElseIf page == "$HP_MCM_Pages3"
+	
+		SetCursorFillMode(LEFT_TO_RIGHT)
+		
+		SetCursorPosition(0)
+		
+		AddTextOption("$HP_MCM_Pages3_Pregnancies", "", OPTION_FLAG_DISABLED)
+		OIDClearPregnancies = AddToggleOption("$HP_MCM_Pages3_ClearPregnancies", ClearPregnancy)
+		AddHeaderOption("")
+		AddHeaderOption("")
+
 		string[] plist = hentaiPregnancyQuest.getPregnancyList()
 		int i = 0
 		while i < plist.Length
-			AddTextOption(plist[i], "", OPTION_FLAG_DISABLED)
+			if hentaiPregnancyQuest.PregnantActors[i].GetActorRef() != none
+				if !hentaiPregnancyQuest.isNotPregnant(hentaiPregnancyQuest.PregnantActors[i].GetActorRef())
+					AddTextOption(plist[i], "", OPTION_FLAG_DISABLED)
+					if (StringUtil.GetLength(plist[i]) > 0)
+						OIDClearSinglePregnancy[i] = AddTextOption("", "$HP_MCM_Pages3_ClearPregnancy")
+					else
+						AddTextOption("you shouldnt see this", "", OPTION_FLAG_DISABLED)
+					endIf
+				endIf
+			endIf
 			i += 1
-		endWhile		
+		endWhile
 		
-	Else
-		
-		SetCursorFillMode(TOP_TO_BOTTOM)
-		
-		SetCursorPosition(0)
-		
-		AddHeaderOption("SexLab Hentai Pregnancy")
-		AddTextOption("Simplified pregnancy for SexLab.", "", OPTION_FLAG_DISABLED)
 	EndIf
 	
 EndEvent
@@ -190,8 +246,23 @@ Event OnOptionSliderAccept(int option, float floatValue)
 		
 	ElseIf option == OIDPregnancyDuration
 		
-		SetSliderOptionValue(option, floatValue, "{0} days")
+		SetSliderOptionValue(option, floatValue, "$HP_Days")
 		PregnancyDuration = value
+		
+	ElseIf option == OIDSoulGemDuration
+		
+		SetSliderOptionValue(option, floatValue, "$HP_Hours")
+		SoulGemDuration = floatValue as int
+		
+	ElseIf option == OIDSoulGemsMax
+		
+		SetSliderOptionValue(option, floatValue, "{0}")
+		SoulGemsMax = floatValue as int
+		
+	ElseIf option == OIDSoulGemBellySize
+		
+		SetSliderOptionValue(option, floatValue, "{1}")
+		SoulGemBellySize = floatValue
 		
 	EndIf
 	
@@ -238,8 +309,29 @@ Event OnOptionSliderOpen(int option)
 		
 		SetSliderDialogStartValue(PregnancyDuration)
 		SetSliderDialogDefaultValue(PregnancyDurationDefault)
-		SetSliderDialogRange(1, 30)
+		SetSliderDialogRange(1, 270)
 		SetSliderDialogInterval(1)
+		
+	ElseIf option == OIDSoulGemDuration
+		
+		SetSliderDialogStartValue(SoulGemDuration)
+		SetSliderDialogDefaultValue(SoulGemDurationDefault)
+		SetSliderDialogRange(1, 100)
+		SetSliderDialogInterval(1)
+		
+	ElseIf option == OIDSoulGemsMax
+		
+		SetSliderDialogStartValue(SoulGemsMax)
+		SetSliderDialogDefaultValue(SoulGemsMaxDefault)
+		SetSliderDialogRange(1, 100)
+		SetSliderDialogInterval(1)
+		
+	ElseIf option == OIDSoulGemBellySize
+		
+		SetSliderDialogStartValue(SoulGemBellySize)
+		SetSliderDialogDefaultValue(SoulGemBellySizeDefault)
+		SetSliderDialogRange(0, 10)
+		SetSliderDialogInterval(0.1)
 		
 	EndIf
 	
@@ -252,6 +344,12 @@ event OnOptionMenuOpen(int option)
 		SetMenuDialogStartIndex(PregnancyActorOption)
 		SetMenuDialogDefaultIndex(PregnancyActorOption)
 		
+	elseif (option == OIDBirthTypeOptions)
+	
+		SetMenuDialogOptions(BirthTypeOptions)
+		SetMenuDialogStartIndex(BirthTypeOption)
+		SetMenuDialogDefaultIndex(BirthTypeOption)
+
 	elseif (option == OIDBodyTypeOptions)
 	
 		SetMenuDialogOptions(BodyTypeOptions)
@@ -267,6 +365,11 @@ event OnOptionMenuAccept(int option, int index)
 	
 		PregnancyActorOption = index
 		SetMenuOptionValue(OIDPregnancyActorOptions, PregnancyActorOptions[PregnancyActorOption])
+		
+	elseif (option == OIDBirthTypeOptions)
+	
+		BirthTypeOption = index
+		SetMenuOptionValue(OIDBirthTypeOptions, BirthTypeOptions[BirthTypeOption])
 		
 	elseif (option == OIDBodyTypeOptions)
 	
@@ -298,6 +401,16 @@ event OnOptionSelect(int option)
 		BreastScaling = !BreastScaling
 		SetToggleOptionValue(OIDBreastScaling, BreastScaling)
 		
+	elseIf option == OIDMilking
+	
+		Milking = !Milking
+		SetToggleOptionValue(OIDMilking, Milking)
+		
+	elseIf option == OIDNPCMilking
+	
+		NPCMilking = !NPCMilking
+		SetToggleOptionValue(OIDNPCMilking, NPCMilking)
+		
 	elseIf option == OIDPostPregnancyEffects
 	
 		PostPregnancyEffects = !PostPregnancyEffects
@@ -313,53 +426,107 @@ event OnOptionSelect(int option)
 		EnableMessages = !EnableMessages
 		SetToggleOptionValue(OIDEnableMessages, EnableMessages)
 		
+	elseIf option == OIDSoulGemPregnancy
+	
+		SoulGemPregnancy = !SoulGemPregnancy
+		SetToggleOptionValue(OIDSoulGemPregnancy, SoulGemPregnancy)
+		
+	elseIf option == OIDForcedOnly
+	
+		ForcedOnly = !ForcedOnly
+		SetToggleOptionValue(OIDForcedOnly, ForcedOnly)
+		
+	elseIf option == OIDCreaturesOnly
+	
+		CreaturesOnly = !CreaturesOnly
+		SetToggleOptionValue(OIDCreaturesOnly, CreaturesOnly)
+		
 	endIf
+
+	int i = 0
+	while (i < OIDClearSinglePregnancy.Length)
+		if (option == OIDClearSinglePregnancy[i])
+			hentaiPregnancyQuest.clearSinglePregnancy(i)
+			ForcePageReset()
+		endIf
+		i = i + 1
+	endWhile
 endEvent
 
 Event OnOptionHighlight(int option)
 	
 	If option == OIDPregnancyChance
-		SetInfoText(PregnancyChanceDescription)
+		SetInfoText("$HP_MCM_PregnancyChanceDescription")
+		
+	ElseIf option == OIDBodyTypeOptions
+		SetInfoText("$HP_MCM_BodyTypeOptionDescription")
 		
 	ElseIf option == OIDChildChance
-		SetInfoText(ChildChanceDescription)
+		SetInfoText("$HP_MCM_ChildChanceDescription")
 		
 	ElseIf option == OIDCumInflationChance
-		SetInfoText(CumInflationChanceDescription)	
+		SetInfoText("$HP_MCM_CumInflationChanceDescription")	
 		
 	ElseIf option == OIDPregnancyDuration
-		SetInfoText(PregnancyDurationDescription)
+		SetInfoText("$HP_MCM_PregnancyDurationDescription")
 		
 	ElseIf option == OIDMaxScaleBelly
-		SetInfoText(MaxScaleBellyDescription)
+		SetInfoText("$HP_MCM_MaxScaleBellyDescription")
 		
 	ElseIf option == OIDMaxScaleBreasts
-		SetInfoText(MaxScaleBreastsDescription)
+		SetInfoText("$HP_MCM_MaxScaleBreastsDescription")
 		
 	ElseIf option == OIDPregnancyActorOptions
-		SetInfoText(PregnancyActorOptionDescription)	
-			
+		SetInfoText("$HP_MCM_PregnancyActorOptionDescription")	
+		
+	ElseIf option == OIDBirthTypeOptions
+		SetInfoText("$HP_MCM_BirthTypeOptionDescription")	
+		
 	ElseIf option == OIDClearPregnancies
-		SetInfoText(ClearPregnancyDescription)	
-			
+		SetInfoText("$HP_MCM_ClearPregnancyDescription")	
+		
 	ElseIf option == OIDPregnancyEffects
-		SetInfoText(PregnancyEffectsDescription)	
+		SetInfoText("$HP_MCM_PregnancyEffectsDescription")	
 		
 	ElseIf option == OIDBreastScaling
-		SetInfoText(BreastScalingDescription)	
+		SetInfoText("$HP_MCM_BreastScalingDescription")	
 		
 	ElseIf option == OIDBellyScaling
-		SetInfoText(BellyScalingDescription)	
+		SetInfoText("$HP_MCM_BellyScalingDescription")	
+		
+	ElseIf option == OIDMilking
+		SetInfoText("$HP_MCM_MilkingDescription")
+		
+	ElseIf option == OIDNPCMilking
+		SetInfoText("$HP_MCM_NPCMilkingDescription")
 		
 	ElseIf option == OIDPostPregnancyEffects
-		SetInfoText(PostPregnancyEffectsDescription)						
-			
+		SetInfoText("$HP_MCM_PostPregnancyEffectsDescription")
+		
 	ElseIf option == OIDAllowAnal
-		SetInfoText(AllowAnalDescription)						
-			
+		SetInfoText("$HP_MCM_AllowAnalDescription")
+		
 	ElseIf option == OIDEnableMessages
-		SetInfoText(EnableMessagesDescription)						
-			
+		SetInfoText("$HP_MCM_EnableMessagesDescription")
+		
+	ElseIf option == OIDSoulGemDuration
+		SetInfoText("$HP_MCM_SoulGemDurationDescription")
+		
+	ElseIf option == OIDSoulGemsMax
+		SetInfoText("$HP_MCM_SoulGemsMaxDescription")
+		
+	ElseIf option == OIDSoulGemBellySize
+		SetInfoText("$HP_MCM_SoulGemBellySizeDescription")
+		
+	ElseIf option == OIDSoulGemPregnancy
+		SetInfoText("$HP_MCM_SoulGemPregnancyDescription")
+		
+	ElseIf option == OIDForcedOnly
+		SetInfoText("$HP_MCM_ForcedOnlyDescription")
+		
+	ElseIf option == OIDCreaturesOnly
+		SetInfoText("$HP_MCM_CreaturesOnlyDescription")
+		
 	EndIf
 	
 EndEvent
@@ -367,10 +534,12 @@ EndEvent
 function pregnanciesCleared()
 	ClearPregnancy = false
 	SetToggleOptionValue(OIDClearPregnancies, ClearPregnancy)
+	ForcePageReset()
 endfunction
 
 event OnGameReload()
 	parent.OnGameReload() ; Don't forget to call the parent!
 	
 	hentaiPregnancyQuest.gameLoaded()
+
 endEvent
