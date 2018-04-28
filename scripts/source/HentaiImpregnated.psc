@@ -48,7 +48,7 @@ Event OnUpdateGameTime()																;daily preg update
 	Else
 		UnregisterForUpdate()
 		HentaiP.endPregnancy(ActorRef, -1, true, 24)
-		Debug.Notification(ActorRef.GetActorBase().GetName() + " is no longer inflated")
+		Debug.Notification(ActorRef.GetActorBase().GetName() + HentaiP.Strings.ShowHentaiImpregnatedStrings(0))
 		ResetBody()
 		Dispel()
 	EndIf
@@ -56,7 +56,7 @@ EndEvent
 
 Event OnEffectFinish(Actor akTarget, Actor akCaster)									;preg end
 	if CurrentDay <= HentaiP.config.PregnancyDuration
-		Debug.Notification(ActorRef.GetActorBase().GetName() + " is no longer inflated")
+		Debug.Notification(ActorRef.GetActorBase().GetName() + HentaiP.Strings.ShowHentaiImpregnatedStrings(0))
 		HentaiP.endPregnancy(ActorRef, -1, true, 24)
 	else
 		ResetBody()

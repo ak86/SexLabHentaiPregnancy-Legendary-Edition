@@ -3,9 +3,12 @@ ScriptName HentaiPregnancyConfig extends SKI_ConfigBase
 HentaiPregnancy Property hentaiPregnancyQuest auto
 
 ; ----- Pregnancy settings -----
-int Property CumInflationChance = 0 Auto Hidden
-int CumInflationChanceDefault = 0
+int Property CumInflationChance = 50 Auto Hidden
+int CumInflationChanceDefault = 50
 int OIDCumInflationChance
+
+int OIDCumInflationCreaturesOnly
+bool Property CumInflationCreaturesOnly = true Auto Hidden
 
 int Property PregnancyChance = 15 Auto Hidden
 int PregnancyChanceDefault = 15
@@ -45,6 +48,9 @@ bool Property PostPregnancyEffects = true Auto Hidden
 
 int OIDAllowAnal
 bool Property AllowAnal = false Auto Hidden
+
+int OIDAllowNonUnique
+bool Property AllowNonUnique = true Auto Hidden
 
 int OIDBreastScaling
 bool Property BreastScaling = true Auto Hidden
@@ -144,6 +150,8 @@ Event OnPageReset(string page)
 		
 				OIDPregnancyActorOptions = AddMenuOption("$HP_MCM_Pages1_PregnancyActorOptions", PregnancyActorOptions[PregnancyActorOption])
 				OIDAllowAnal = AddToggleOption("$HP_MCM_Pages1_AllowAnal", AllowAnal)
+				OIDAllowNonUnique = AddToggleOption("$HP_MCM_Pages1_AllowNonUnique", AllowNonUnique)
+				OIDCumInflationCreaturesOnly = AddToggleOption("$HP_MCM_Pages1_CumInflationCreaturesOnly", CumInflationCreaturesOnly)
 				
 				OIDCumInflationChance = AddSliderOption("$HP_MCM_Pages1_CumInflationChance", CumInflationChance, "{0}%")
 				OIDPregnancyChance = AddSliderOption("$HP_MCM_Pages1_PregnancyChance", PregnancyChance, "{0}%")
@@ -195,7 +203,7 @@ Event OnPageReset(string page)
 		AddHeaderOption("")
 		AddHeaderOption("")
 
-		string[] plist = hentaiPregnancyQuest.getPregnancyList()
+		string[] plist = getPregnancyList()
 		int i = 0
 		while i < plist.Length
 			if hentaiPregnancyQuest.PregnantActors[i].GetActorRef() != none
@@ -421,6 +429,16 @@ event OnOptionSelect(int option)
 		AllowAnal = !AllowAnal
 		SetToggleOptionValue(OIDAllowAnal, AllowAnal)
 		
+	elseIf option == OIDAllowNonUnique
+	
+		AllowNonUnique = !AllowNonUnique
+		SetToggleOptionValue(OIDAllowNonUnique, AllowNonUnique)
+		
+	elseIf option == OIDCumInflationCreaturesOnly
+	
+		CumInflationCreaturesOnly = !CumInflationCreaturesOnly
+		SetToggleOptionValue(OIDCumInflationCreaturesOnly, CumInflationCreaturesOnly)
+		
 	elseIf option == OIDEnableMessages
 	
 		EnableMessages = !EnableMessages
@@ -467,6 +485,9 @@ Event OnOptionHighlight(int option)
 	ElseIf option == OIDCumInflationChance
 		SetInfoText("$HP_MCM_CumInflationChanceDescription")	
 		
+	ElseIf option == OIDCumInflationCreaturesOnly
+		SetInfoText("$HP_MCM_CumInflationCreaturesOnlyDescription")	
+		
 	ElseIf option == OIDPregnancyDuration
 		SetInfoText("$HP_MCM_PregnancyDurationDescription")
 		
@@ -506,6 +527,9 @@ Event OnOptionHighlight(int option)
 	ElseIf option == OIDAllowAnal
 		SetInfoText("$HP_MCM_AllowAnalDescription")
 		
+	ElseIf option == OIDAllowNonUnique
+		SetInfoText("$HP_MCM_AllowNonUniqueDescription")
+		
 	ElseIf option == OIDEnableMessages
 		SetInfoText("$HP_MCM_EnableMessagesDescription")
 		
@@ -543,3 +567,30 @@ event OnGameReload()
 	hentaiPregnancyQuest.gameLoaded()
 
 endEvent
+
+string[] function getPregnancyList()
+	string[] plist = new string[50]
+	int i = 0
+	int j = 0
+	while i < hentaiPregnancyQuest.PregnantActors.Length
+		int Remainder = hentaiPregnancyQuest.PregnantActors[i].getDurationHours() - hentaiPregnancyQuest.PregnantActors[i].getCurrentHour()
+		string TimeDesc = hentaiPregnancyQuest.Strings.ShowHentaiPregnancyConfigStrings(0)
+		if Remainder < 0 
+			Remainder = Remainder + hentaiPregnancyQuest.PregnantActors[i].getPostDurationHours()
+			TimeDesc += hentaiPregnancyQuest.Strings.ShowHentaiPregnancyConfigStrings(2)
+			if Remainder > 24
+				Remainder = Remainder / 24
+				TimeDesc = hentaiPregnancyQuest.Strings.ShowHentaiPregnancyConfigStrings(1) + hentaiPregnancyQuest.Strings.ShowHentaiPregnancyConfigStrings(2)
+			endif
+		elseif Remainder > 24
+			Remainder = Remainder / 24
+			TimeDesc = hentaiPregnancyQuest.Strings.ShowHentaiPregnancyConfigStrings(1)
+		endif
+		if Remainder > 0
+			plist[j] = hentaiPregnancyQuest.PregnantActors[i].getMother().GetLeveledActorBase().GetName() + hentaiPregnancyQuest.Strings.ShowHentaiPregnancyConfigStrings(3) + hentaiPregnancyQuest.PregnantActors[i].getFather().GetLeveledActorBase().GetName() + " " + Remainder + TimeDesc
+			j += 1
+		endIf
+		i += 1
+	endWhile
+	return plist
+endFunction

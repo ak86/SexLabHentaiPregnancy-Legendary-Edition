@@ -1,26 +1,31 @@
 <fomod>
-  <Name>SexLabHentaiPregnancyRevamp</Name>
-  <Version>17-04-2018</Version>
+  <Name>SexLabHentaiPregnancy Legendary Edition</Name>
+  <Version>01-05-2018</Version>
   <Author>Ed86</Author>
   <Website>https://www.patreon.com/Ed86</Website>
   <Description>
-  Ed86: 
-  increased active pregnancies(actor alias) 20->50 (requires clean save)
+  changes since SexLabHentaiPregnancy V1.19:
   fixed missing properties
-  fixed scripts for sexlab v1.59c+ support
-  added breast and belly scale toggles
-  changed scaling to NiO
-  slif integration
-  added milking
+  fixed scripts to support Sexlab Framework v1.59c+
+  increased active pregnancies 20->50
+  increased max possible pregnancy duration to 270 +-10% days
+  Support for SexLab Inflation Framework
   Support for SL Separate Orgasms
-  added soulgem birth
+  Support for EC/ES/ED - their pregnancies block pregnancy, cuminflation will still happen
+  changed default scaling to NetImmerse Override(makes mod compatible will all ather bodychanging mods)
+  added breast and belly scale toggles
+  added milking
+  added soulgem birthing
+  added toggle to allow non unique npcs pregnancy
+  added script checks so birthing/milking wont be interrupted by sexlab (and maybe other mods)
   full mcm translation support
-  increased max pregnancy duration to 270 +-10% days
+  full script translation support
+  something else
+    
   
-  TODO:
-  script translation support
+  TODOornotTODO:
   female cycle
-  maybe add more pregnancy effects
+  more pregnancy effects
   
   </Description>
 </fomod>

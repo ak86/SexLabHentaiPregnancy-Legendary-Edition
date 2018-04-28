@@ -9,7 +9,14 @@ Event OnEffectStart(Actor Target, Actor Caster)
 		endIf
 		If HentaiP.PlayerREF == Caster
 			Game.DisablePlayerControls()
+		Else
+			;disable npc moving
+			Caster.Setunconscious(true)
 		EndIf
+
+		;prevent other mods form interrupting milking
+		HentaiP.SexLab.ForbidActor(Caster)
+		Caster.AddToFaction(HentaiP.SexLab.AnimatingFaction)
 		
 		Debug.SendAnimationEvent(Caster,"hentaipregnancyZaZAPCHorFC")
 		
@@ -22,12 +29,12 @@ Event OnEffectStart(Actor Target, Actor Caster)
 						
 						if self.GetBaseObject() != HentaiP.HentaiMilkSquirtSpellEffect && Game.GetModbyName("HearthFires.esm") != 255 
 							If HentaiP.PlayerREF == Caster
-								Debug.Notification("You begin squeezing your delicious breast milk into a jug.")
+								Debug.Notification(HentaiP.Strings.ShowHentaiMilkSquirtEffectStrings(0))
 							EndIf
 							Caster.AddItem(Game.GetFormFromFile(0x3534, "HearthFires.esm"), 1)
 						else
 							If HentaiP.PlayerREF == Caster
-								Debug.Notification("You playfully squeeze breast milk everywhere!")
+								Debug.Notification(HentaiP.Strings.ShowHentaiMilkSquirtEffectStrings(1))
 							EndIf
 						endif
 						
@@ -38,7 +45,7 @@ Event OnEffectStart(Actor Target, Actor Caster)
 						endif
 					else
 						If HentaiP.PlayerREF == Caster
-							Debug.Notification("You playfully squeeze breasts, unfortunately they don't have much milk.")
+							Debug.Notification(HentaiP.Strings.ShowHentaiMilkSquirtEffectStrings(2))
 						EndIf
 						HentaiP.playNoMilkEffect(Caster)
 					endIf
@@ -48,8 +55,15 @@ Event OnEffectStart(Actor Target, Actor Caster)
 		
 		Debug.SendAnimationEvent(Caster, "IdleForceDefaultState")
 		
+		;allow other mods to animate actor
+		HentaiP.SexLab.AllowActor(Caster)
+		Caster.RemoveFromFaction(HentaiP.SexLab.AnimatingFaction)
+
 		If HentaiP.PlayerREF == Caster
 			Game.EnablePlayerControls()
+		Else
+			;enable npc moving
+			Caster.Setunconscious(false)
 		EndIf
 	EndIf
 endEvent
