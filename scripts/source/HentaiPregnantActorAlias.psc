@@ -209,14 +209,19 @@ function recheckBody()
 	EndIf
 endFunction
 
-bool function targetSizeCalc()
+bool function PregDurationCalc()
 	int DurationDays = HentaiP.config.PregnancyDuration
+	DurationHours = (DurationDays * 24 * (1 - Utility.RandomFloat(-0.1, 0.1))) as int
+	
+	return true
+endFunction
+
+bool function targetSizeCalc()
 	TargetBreastSize = HentaiP.config.MaxScaleBreasts
 	TargetBellySize = HentaiP.config.MaxScaleBelly	
 	
 	float BreastSizeDelta = TargetBreastSize - CurrentBreastSize
 	float BellySizeDelt = TargetBellySize - CurrentBellySize
-	DurationHours = (DurationDays * 24 * (1 - Utility.RandomFloat(-0.1, 0.1))) as int
 	IncrBreastRate = BreastSizeDelta / (DurationHours / 2)
 	IncrBellyRate = BellySizeDelt / (DurationHours / 2)
 	
@@ -334,6 +339,7 @@ State Pregnant
 		
 		CurrentBellySize = 1
 		CurrentBreastSize = 1
+		PregDurationCalc()
 		targetSizeCalc()
 		lastGameTime = Utility.GetCurrentGameTime()
 

@@ -253,18 +253,21 @@ Event OnOptionSliderAccept(int option, float floatValue)
 		
 		SetSliderOptionValue(option, floatValue,"{1}")
 		MaxScaleBelly = floatValue
+		hentaiPregnancyQuest.UpdateTargetSize()
 		hentaiPregnancyQuest.UpdateSize()
 		
 	ElseIf option == OIDMaxScaleBreasts
 		
 		SetSliderOptionValue(option, floatValue, "{1}")
 		MaxScaleBreasts = floatValue
+		hentaiPregnancyQuest.UpdateTargetSize()
 		hentaiPregnancyQuest.UpdateSize()
 		
 	ElseIf option == OIDPregnancyDuration
 		
 		SetSliderOptionValue(option, floatValue, "$HP_Days")
 		PregnancyDuration = value
+		hentaiPregnancyQuest.UpdatePregDuration()
 		
 	ElseIf option == OIDSoulGemDuration
 		
@@ -280,6 +283,7 @@ Event OnOptionSliderAccept(int option, float floatValue)
 		
 		SetSliderOptionValue(option, floatValue, "{1}")
 		SoulGemBellySize = floatValue
+		hentaiPregnancyQuest.UpdateTargetSize()
 		hentaiPregnancyQuest.UpdateSize()
 		
 	EndIf

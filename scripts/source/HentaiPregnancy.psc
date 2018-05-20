@@ -222,8 +222,27 @@ function UpdateSize()
 	int i = 0
 	while i < PregnantActors.Length
 		if PregnantActors[i].getMother() != none
-			PregnantActors[i].targetSizeCalc()
 			PregnantActors[i].recheckBody()
+		endIf
+		i += 1
+	endWhile
+endFunction
+
+function UpdateTargetSize()
+	int i = 0
+	while i < PregnantActors.Length
+		if PregnantActors[i].getMother() != none
+			PregnantActors[i].targetSizeCalc()
+		endIf
+		i += 1
+	endWhile
+endFunction
+
+function UpdatePregDuration()
+	int i = 0
+	while i < PregnantActors.Length
+		if PregnantActors[i].getMother() != none
+			PregnantActors[i].PregDurationCalc()
 		endIf
 		i += 1
 	endWhile
