@@ -818,11 +818,8 @@ Event HentaiPregnancyImpregnate(string eventName, string argString, float argNum
 	sslBaseAnimation anim = SexLab.HookAnimation(argString)
 	
 	;impregnate if:
-	;-more than 1 actor and
-	;-separate orgasm disabled
-	;-or slso always orgasm enabled
-	if actorList.Length > 1\
-	&& (!SexLab.config.SeparateOrgasms || JsonUtil.GetIntValue("/SLSO/Config", "sl_default_always_orgasm") == 1 || (!controller.HasPlayer && JsonUtil.GetIntValue("/SLSO/Config", "sl_npcscene_always_orgasm") == 1))
+	;-more than 1 actor
+	if actorList.Length > 1
 
 		int MaleIndex = -1
 		int FemaleIndex = -1
@@ -865,9 +862,8 @@ Event HentaiPregnancyImpregnateS(Form ActorRef, Int Thread)
 	
 	;impregnate if:
 	;-more than 1 actor and
-	;-separate orgasm enabled
 	;-orgasming actor not in recieving/female position (0)
-	if actorList.Length > 1 && akActor != actorList[0] && SexLab.config.SeparateOrgasms
+	if actorList.Length > 1 && akActor != actorList[0]
 	
 		int MaleIndex = -1
 		int FemaleIndex = -1
